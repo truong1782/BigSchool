@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BigSchool.Models;
@@ -68,6 +70,54 @@ namespace BigSchool.Controllers
             return View(courses);
         }
 
+        public ActionResult Edit(int? id)
+        {
+            BigSchoolContext context = new BigSchoolContext();
+            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Course course = context.Courses.Where(c => c.id == id && c.LectureId == currentUser.Id).FirstOrDefault();
+            if (course == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.CategoryId = new SelectList(context.Categories, "Id", "Name", course.CategoryId);
+            return View(course);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "id,LectureId,Place,DateTime,CategoryId")] Course course)
+        {
+            BigSchoolContext context = new BigSchoolContext();
+            if (ModelState.IsValid)
+            {
+                context.Entry(course).State = EntityState.Modified;
+                context.SaveChanges();
+                return RedirectToAction("Mine");
+            }
+            ViewBag.CategoryId = new SelectList(context.Categories, "Id", "Name", course.CategoryId);
+            return View(course);
+        }
+
+        public ActionResult Delete(int? id)
+        {
+            BigSchoolContext context = new BigSchoolContext();
+            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            Course course = context.Courses.Where(c => c.id == id && c.LectureId == currentUser.Id).FirstOrDefault();
+            Attendance attendance = context.Attendances.Where(a => a.CourseId == id).FirstOrDefault();
+            context.Courses.Remove(course);
+            if (attendance != null)
+            {
+                context.Attendances.Remove(attendance);
+
+            }
+            context.SaveChanges();
+            return RedirectToAction("Mine");
+        }
 
     }
 }
