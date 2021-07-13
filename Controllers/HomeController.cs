@@ -11,7 +11,6 @@ namespace BigSchool.Controllers
 {
     public class HomeController : Controller
     {
-        BigSchoolContext context = new BigSchoolContext();
         public ActionResult Index()
         {
             BigSchoolContext context = new BigSchoolContext();
@@ -25,18 +24,6 @@ namespace BigSchool.Controllers
             return View(upcommingCourse);
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+    
     }
 }
