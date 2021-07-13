@@ -24,7 +24,7 @@ namespace BigSchool.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Course objCourse)
+        public ActionResult Create([Bind(Include = "id,LectureId,Place,DateTime,CategoryId")] Course objCourse)
         {
             BigSchoolContext context = new BigSchoolContext();
             ModelState.Remove("LectureId");
