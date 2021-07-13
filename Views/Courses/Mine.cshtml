@@ -26,8 +26,8 @@
                     </span>
                 </div>
                 <div class="action">
-                    <a href="">Edit</a>
-                    <a href="">Delete</a>
+                    <a href="@Url.Action("Edit", "Courses", new {id = course.id })">Edit</a>
+                    <a onclick="return confirmAction()" href="@Url.Action("Delete", "Courses", new {id = course.id })">Delete</a>
                 </div>
             </li>
         }
