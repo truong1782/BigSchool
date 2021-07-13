@@ -59,6 +59,14 @@ textarea {
     left: 70px;
 }
 
+.course > li .lecture {
+
+}
+
+.course > li .category {
+
+}
+
 .course > li .action {
     display:none;
     left:70px;
