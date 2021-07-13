@@ -46,13 +46,15 @@ namespace BigSchool.Controllers
         public ActionResult Attending()
         {
             BigSchoolContext context = new BigSchoolContext();
-            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                .FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
             var listAttendances = context.Attendances.Where(p => p.Attendee == currentUser.Id).ToList();
             var courses = new List<Course>();
             foreach (Attendance temp in listAttendances)
             {
                 Course objCourse = temp.Course;
-                objCourse.Name = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(objCourse.LectureId).Name;
+                objCourse.Name = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                    .FindById(objCourse.LectureId).Name;
                 courses.Add(objCourse);
             }
             return View(courses);
@@ -61,7 +63,8 @@ namespace BigSchool.Controllers
         public ActionResult Mine()
         {
             BigSchoolContext context = new BigSchoolContext();
-            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                .FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
             var courses = context.Courses.Where(c => c.LectureId == currentUser.Id && c.DateTime > DateTime.Now).ToList();
             foreach (var i in courses)
             {
@@ -73,7 +76,8 @@ namespace BigSchool.Controllers
         public ActionResult Edit(int? id)
         {
             BigSchoolContext context = new BigSchoolContext();
-            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                .FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
             if (id == null)
             {
@@ -106,7 +110,8 @@ namespace BigSchool.Controllers
         public ActionResult Delete(int? id)
         {
             BigSchoolContext context = new BigSchoolContext();
-            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                .FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
             Course course = context.Courses.Where(c => c.id == id && c.LectureId == currentUser.Id).FirstOrDefault();
             Attendance attendance = context.Attendances.Where(a => a.CourseId == id).FirstOrDefault();
             context.Courses.Remove(course);
