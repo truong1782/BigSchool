@@ -12,15 +12,26 @@ namespace BigSchool.Controllers
     public class AttendancesController : ApiController
     {
         [HttpPost]
-        public IHttpActionResult Attend(Course attandanceDto)
+        public IHttpActionResult Attend(Course attendanceDto)
         {
             var userID = User.Identity.GetUserId();
             BigSchoolContext context = new BigSchoolContext();
-            if (context.Attendances.Any(p => p.Attendee == userID && p.CourseId == attandanceDto.id))
+            if (context.Attendances.Any(p => p.Attendee == userID && p.CourseId ==
+            attendanceDto.id))
             {
-                return BadRequest("The attendance already exists!");
+                // return BadRequest("The attendance already exists!");
+                // xóa thông tin khóa học đã đăng ký tham gia trong bảng Attendances
+                context.Attendances.Remove(context.Attendances.SingleOrDefault(p =>
+                p.Attendee == userID && p.CourseId == attendanceDto.id));
+                context.SaveChanges();
+                return Ok("cancel");
             }
-            var attendance = new Attendance() { CourseId = attandanceDto.id, Attendee = User.Identity.GetUserId() };
+            var attendance = new Attendance()
+            {
+                CourseId = attendanceDto.id,
+                Attendee =
+            User.Identity.GetUserId()
+            };
             context.Attendances.Add(attendance);
             context.SaveChanges();
             return Ok();
